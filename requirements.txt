@@ -1,0 +1,12 @@
+langchain
+langchain-community
+unstructured
+openai
+chromadb
+python-dotenv
+streamlit
+altair
+tiktoken
+langchain-chroma
+python-pptx
+python-docx
