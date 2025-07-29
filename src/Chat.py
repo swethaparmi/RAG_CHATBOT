@@ -23,8 +23,9 @@ client = AzureOpenAI(
 )
 AZURE_GPT_DEPLOYMENT = os.getenv("AZURE_GPT4_DEPLOYMENT") 
 
+######################## Retrieve top-k similar chunks using ChromaDB ########################
+
 def retrieve_similar_chunks(query: str, k: int = 4) -> List[Document]:
-    """Retrieve top-k similar chunks using ChromaDB."""
     vectorstore = get_chroma_vectorstore()
     results = vectorstore.similarity_search(query, k=k)
     print(f"Retrieved {len(results)} chunks for query: {query}")

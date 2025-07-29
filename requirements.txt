@@ -10,3 +10,4 @@ tiktoken
 langchain-chroma
 python-pptx
 python-docx
+fastapi
