@@ -1,4 +1,4 @@
-RAG Chatbot Processing Pipeline (Point-wise)
+RAG Chatbot Processing Pipeline
  Upload
 The user uploads one or more documents using the Streamlit UI.
 Supported formats: PDF, DOCX, PPTX, TXT.
