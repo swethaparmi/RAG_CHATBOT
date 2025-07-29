@@ -21,7 +21,7 @@ When a user asks a question, the query is also embedded, and semantic similarity
 Response Generation
 Retrieved chunks are passed to GPT-4o, which uses them as context to generate a grounded and context-aware answer.
 
-📚 Referenced Answer Output
+Referenced Answer Output
 The chatbot response includes:
 
 The answer
