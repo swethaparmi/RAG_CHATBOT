@@ -65,6 +65,16 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+venv/
+__pycache__/
+*.pyc
+chroma_db/
+logs/
+.env
+share/
+config/
+*.ipynb_checkpoint
+
 # Scrapy stuff:
 .scrapy
 
