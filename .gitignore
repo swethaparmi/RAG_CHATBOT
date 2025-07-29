@@ -7,3 +7,4 @@ logs/
 share/
 config/
 *.ipynb_checkpoint
+RAG_CHATBOT/
