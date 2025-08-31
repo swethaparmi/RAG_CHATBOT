@@ -4,48 +4,55 @@ from src.document_processor import process_document_path
 from src.vector_store import store_embeddings_in_chroma
 import os
 
+# ######################## Page Config #####################################
 st.set_page_config(page_title="GenAI Chatbot", layout="wide")
 
-# Initialize session state
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+####################### Session State Init #######################################
+st.session_state.setdefault("chat_history", [])
+st.session_state.setdefault("greeted", False)
 
-if "greeted" not in st.session_state:
-    st.session_state.greeted = False
-
-# Sidebar for document upload
+######################## Sidebar: Upload ################################
 st.sidebar.title("Document Upload")
-uploaded_file = st.sidebar.file_uploader("Upload a document (PDF, DOCX, PPTX)", type=["pdf", "docx", "pptx"])
+
+uploaded_file = st.sidebar.file_uploader(
+    "Upload a document (PDF, DOCX, PPTX)",
+    type=["pdf", "docx", "pptx"]
+)
 
 if uploaded_file:
-    with open(os.path.join("data", uploaded_file.name), "wb") as f:
+    os.makedirs("data", exist_ok=True)  # ensure folder exists
+    file_path = os.path.join("data", uploaded_file.name)
+
+    with open(file_path, "wb") as f:
         f.write(uploaded_file.read())
 
-    chunks = process_document_path(os.path.join("data", uploaded_file.name))
+    chunks = process_document_path(file_path)
     store_embeddings_in_chroma(chunks)
     st.sidebar.success("✅ Document uploaded and processed!")
 
-# Sidebar actions
-if st.sidebar.button("Clear Chat"):
+################################ Sidebar: Actions ###################################- #
+if st.sidebar.button("🧹 Clear Chat"):
     st.session_state.chat_history = []
     st.session_state.greeted = False
     st.experimental_rerun()
 
-if st.sidebar.button(" Exit App"):
-    st.sidebar.info("Close the browser tab to exit.")
+if st.sidebar.button("🚪 Exit App"):
     st.stop()
 
-# Main UI Title
+########################## Main UI #########################
 st.title("GenAI Chatbot")
 
-# First greeting interface
+# Greeting Step
 if not st.session_state.greeted:
-    greeting = st.text_input("Say hi to begin...", placeholder="Type 'Hi' or 'Hello' to start chatting")
-    if greeting.lower() in ["hi", "hello"]:
+    greeting = st.text_input(
+        "Say hi to begin...",
+        placeholder="Type 'Hi' or 'Hello' to start chatting"
+    )
+    if greeting and greeting.strip().lower() in ["hi", "hello"]:
         st.session_state.greeted = True
         st.success("Hi there! Please upload a document and start chatting.")
 else:
-    # Chat interface
+    # Chat Interface
     query = st.text_input("Ask a question about your document")
 
     if query:
@@ -53,8 +60,8 @@ else:
             docs = retrieve_similar_chunks(query)
             result = ask_gpt(query, docs)
 
-            # Display answer
-            st.markdown("### Answer:")
+            # Display Answer
+            st.markdown("###  Answer:")
             st.success(result["answer"])
 
             # Save to history
@@ -68,10 +75,10 @@ else:
                     for i, ref in enumerate(result["references"], start=1):
                         st.markdown(f"**Reference {i}:** [{ref}]")
 
-    # Show chat history
+    # Chat History
     if st.session_state.chat_history:
         st.markdown("---")
         st.markdown("### Chat History")
-        for i, chat in enumerate(reversed(st.session_state.chat_history), 1):
+        for chat in reversed(st.session_state.chat_history):
             st.write(f"**You:** {chat['question']}")
             st.write(f"**Bot:** {chat['answer']}")
