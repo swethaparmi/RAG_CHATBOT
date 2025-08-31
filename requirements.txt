@@ -1,5 +1,6 @@
 langchain
 langchain-community
+langchain-openai
 unstructured
 openai
 chromadb
